@@ -499,3 +499,5 @@
 2024-11-27 15:09:26,989 - DEBUG - close.started
 2024-11-27 15:09:26,989 - DEBUG - close.complete
 2024-11-27 15:09:27,192 - INFO -  * Restarting with stat
+2024-11-27 15:09:37,060 - WARNING -  * Debugger is active!
+2024-11-27 15:09:37,064 - INFO -  * Debugger PIN: 100-696-949
