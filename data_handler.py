@@ -31,7 +31,7 @@ def preprocess_card_data(CardCategory, Category):
     # 카드 데이터와 대분류 데이터 병합
     card = pd.merge(CardCategory, Category, how='left', on='categoryId')
 
-    # 카드별 mainCtgName과 mainCtgId 리스트 생성
+    # 카드별 categoryName categoryId 리스트 생성
     card_ctg_list = card.groupby('cardId').agg({
         'categoryId': list,
         'categoryName': list

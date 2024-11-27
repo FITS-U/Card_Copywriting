@@ -487,3 +487,15 @@
 2024-11-27 14:11:29,294 - DEBUG - response_closed.complete
 2024-11-27 14:11:29,301 - INFO - 127.0.0.1 - - [27/Nov/2024 14:11:29] "GET /advertisement/3 HTTP/1.1" 200 -
 2024-11-27 14:11:29,636 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/11" 202 33
+2024-11-27 15:09:26,832 - INFO -  * Detected change in 'C:\\Users\\user\\Desktop\\marketing-langchain\\data_handler.py', reloading
+2024-11-27 15:09:26,835 - DEBUG - Closing Client.session
+2024-11-27 15:09:26,838 - DEBUG - Closing Client.session
+2024-11-27 15:09:26,987 - DEBUG - close.started
+2024-11-27 15:09:26,987 - DEBUG - close.complete
+2024-11-27 15:09:26,987 - DEBUG - close.started
+2024-11-27 15:09:26,988 - DEBUG - close.complete
+2024-11-27 15:09:26,988 - DEBUG - close.started
+2024-11-27 15:09:26,989 - DEBUG - close.complete
+2024-11-27 15:09:26,989 - DEBUG - close.started
+2024-11-27 15:09:26,989 - DEBUG - close.complete
+2024-11-27 15:09:27,192 - INFO -  * Restarting with stat
