@@ -1,41 +1,11 @@
 import os
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
 os.environ['OPENAI_API_KEY'] = os.getenv("OPENAI_API_KEY")
-
-# 사용자별 필터링된 카드 데이터로 광고 문구 생성
-def generate_ads_for_user(user_id, filtered_recommendations, card_info):
-    # 사용자 ID에 해당하는 최종 추천 카드 3개 필터링
-    user_recommendations = filtered_recommendations[filtered_recommendations['userId'] == user_id].head(3)
-    ad_results = []
-
-    for _, row in user_recommendations.iterrows():
-        card_id = row['recommended_cardId']
-        benefits = row['mainCtgNameListStr']
-        print(benefits)
-        # 카드 이름 가져오기
-        card_name_row = card_info[card_info['cardId'] == card_id]
-        if not card_name_row.empty:
-            card_name = card_name_row.iloc[0]['cardName']
-        else:
-            card_name = f"Card-{card_id}"  # 이름이 없을 경우 fallback
-
-        # 광고 문구 생성
-        ad_copy = generate_advertising_copy(card_name, benefits)
-        ad_results.append({
-            "userId": user_id,
-            "cardId": card_id,
-            "cardName": card_name,
-            "benefits": benefits,
-            "adCopy": ad_copy
-        })
-
-    return pd.DataFrame(ad_results)
-
 
 
 # 광고 문구 생성 함수
@@ -65,10 +35,10 @@ def generate_advertising_copy(card_name, benefits):
     요청사항:
     입력된 카드 정보 각각에 대해 1개의 톡톡 튀는 광고 문구를 작성해주세요.
     각 문구는 다음을 포함해야 합니다:
-    - 카드의 주요 혜택 여러개 강조
     - 감성적 또는 실용적 요소
     - 이모티콘으로 생동감 추가
-    - 40대 남성이 친근감을 느낄만한 문구로 제작
+    - 두 줄로 분량 제한
+    - 두 줄은 엔터 처리로 분리
 
     카드 정보:
     - 카드 이름: {card_name}
@@ -87,4 +57,51 @@ def generate_advertising_copy(card_name, benefits):
     formatted_input = {"card_name": card_name, "benefits": benefits}
     response = llm_chain.invoke(formatted_input)
 
-    return str(response)
+    return str(response.content)
+
+
+# 사용자별 필터링된 카드 데이터로 광고 문구 생성
+def generate_ads_for_user(user_id, filtered_recommendations, card_info):
+    # 사용자 ID에 해당하는 최종 추천 카드 3개 필터링
+    user_recommendations = filtered_recommendations[filtered_recommendations['userId'] == user_id].head(3)
+    ad_results = []
+
+    for _, row in user_recommendations.iterrows():
+        card_id = row['recommended_cardId']
+        benefits = row['mainCtgNameListStr']
+        # 카드 이름 가져오기
+        card_name_row = card_info[card_info['cardId'] == card_id]
+        if not card_name_row.empty:
+            card_name = card_name_row.iloc[0]['cardName']
+        else:
+            card_name = f"Card-{card_id}"  # 이름이 없을 경우 fallback
+
+        # 광고 문구 생성
+        ad_copy = generate_advertising_copy(card_name, benefits)
+        ad_results.append({
+            "userId": user_id,
+            "cardId": card_id,
+            "cardName": card_name,
+            "benefits": benefits,
+            "adCopy": ad_copy
+        })
+
+    return pd.DataFrame(ad_results)
+
+def process_ad_results(ad_results):
+    processed_results = []
+
+    for ad in ad_results:
+        # adCopy를 두 개로 나누기
+        ad_copy_content = ad["adCopy"].split("\n")
+        ad_copy_1 = ad_copy_content[0].strip() if len(ad_copy_content) > 0 else ""
+        ad_copy_2 = ad_copy_content[1].strip() if len(ad_copy_content) > 1 else ""
+
+        # 새로운 구조로 저장
+        processed_results.append({
+            "userId": ad["userId"],
+            "adCopy1": ad_copy_1,
+            "adCopy2": ad_copy_2
+        })
+
+    return processed_results

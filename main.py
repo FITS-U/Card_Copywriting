@@ -11,7 +11,7 @@ from card_recommendation import (calculate_card_scores,
                                  get_most_similar_cards,
                                  add_user_interest_to_recommendations)
 import pandas as pd
-from ad_generator import generate_ads_for_user
+from ad_generator import generate_ads_for_user, process_ad_results
 from flask import Flask, jsonify
 import logging
 logging.basicConfig(
@@ -59,7 +59,6 @@ def setup_data():
 
     # 카드 혜택 벡터화
     ctg_matrix, _  = vectorize_card_data(card_ctg_list)
-    print("ctg_matrix 타입:", type(ctg_matrix))
     # 카드 간 유사도 계산
     similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
 
@@ -74,7 +73,7 @@ def get_advertisement(user_id):
         top_cards = select_top_card_with_low_fee(card_scores, AnnualFee)
 
         # 사용자별로 유사 카드 추천
-        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=2)
+        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
 
         # 추천 카드에서 사용자 관심 혜택 필터링
         filtered_recommendations = add_user_interest_to_recommendations(
@@ -84,8 +83,11 @@ def get_advertisement(user_id):
         # 광고 생성
         ad_results = generate_ads_for_user(user_id, filtered_recommendations, card_info)
 
+        # 광고 결과 처리 (adCopy1, adCopy2로 나눔)
+        processed_ads = process_ad_results(ad_results.to_dict(orient="records"))
+
         # 결과 반환
-        return jsonify(ad_results[["userId", "adCopy"]].to_dict(orient="records"))
+        return jsonify(processed_ads)
     except Exception as e:
 
           # 에러 로그 출력

@@ -83,6 +83,5 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
                 "recommended_cardId": recommended_card_id,
                 "mainCtgNameListStr": filtered_cards.iloc[0]['intersectionMapped']
             })
-        print(f"해당하는 DF 확인 : {filtered_cards}")
     return pd.DataFrame(filtered_recommendations)
 
