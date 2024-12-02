@@ -1,101 +1,288 @@
-from data_handler import load_data, preprocess_annual_fee,preprocess_card_data
+# from data_handler import  preprocess_card_data
+# from interest_calculator import (
+#     calculate_explicit_interest,
+#     calculate_implicit_interest,
+#     merge_interests,
+# )
+# from contents import vectorize_card_data, calculate_card_similarity
+# from card_recommendation import (
+#     calculate_card_scores,
+#     select_top_card_with_low_fee,
+#     get_most_similar_cards,
+#     add_user_interest_to_recommendations
+# )
+# from ad_generator import generate_ads_for_user,process_ad_results
+# import pandas as pd
+# from flask import Flask, jsonify, request
+# import logging
+
+# # 로깅 설정
+# logging.basicConfig(
+#     filename="debug.log",
+#     level=logging.DEBUG,
+#     format="%(asctime)s - %(levelname)s - %(message)s"
+# )
+
+# app = Flask(__name__)
+
+# # 글로벌 데이터 저장소
+# global_data = {
+#     "card_info": None,
+#     "card_ctg_list": None,
+#     "similarity_df": None,
+# }
+
+# # 초기화 함수
+# def initialize_global_data():
+#     try:
+#         # 카드 정보 로드
+#         card_info = pd.read_csv("data/카드정보.csv")
+#         card_category = pd.read_csv("data/CardCategory.csv")
+
+#         # 카드 데이터 전처리
+#         categories_df = pd.read_csv("data/Category.csv")  # 공통 카테고리 데이터
+#         card_ctg_list = preprocess_card_data(card_category, categories_df)
+
+#         # 벡터화 및 유사도 계산
+#         ctg_matrix, _ = vectorize_card_data(card_ctg_list)
+#         similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
+
+#         # 글로벌 데이터 저장
+#         global_data.update({
+#             "card_info": card_info,
+#             "card_ctg_list": card_ctg_list,
+#             "similarity_df": similarity_df,
+#         })
+
+#         print("Global data initialized successfully!")
+#     except Exception as e:
+#         logging.error(f"Error during global data initialization: {str(e)}")
+#         raise
+
+# # 광고 추천 엔드포인트
+# @app.route("/advertisement", methods=["POST"])
+# def get_advertisement():
+#     try:
+#         # 요청 데이터 수신
+#         request_data = request.get_json()
+#         categories = request_data.get("categories", [])
+#         logs = request_data.get("logs", [])
+#         category_df = pd.DataFrame(categories)
+#         logs_df = pd.DataFrame(logs)
+
+#         # 관심도 계산
+#         explicit_interest = calculate_explicit_interest(category_df)
+#         implicit_interest = calculate_implicit_interest(logs_df)
+#         combined_interest = merge_interests(explicit_interest, implicit_interest)
+
+#         # 카드 점수 계산
+#         card_ctg_list = global_data["card_ctg_list"]
+#         card_scores = calculate_card_scores(card_ctg_list, combined_interest)
+
+#         # 사용자별 최적 카드 선택
+#         top_cards = select_top_card_with_low_fee(card_scores, global_data["card_info"])
+
+#         # 유사 카드 추천
+#         similarity_df = global_data["similarity_df"]
+#         recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=2)
+
+#         # 사용자 관심사 기반 혜택 추가
+#         categories = pd.read_csv("data/Category.csv")
+#         enriched_recommendations = add_user_interest_to_recommendations(
+#             recommendations, combined_interest, card_ctg_list, categories
+#         )
+
+#         # 광고 생성
+#         ad_results = generate_ads_for_user(1, enriched_recommendations, global_data["card_info"])
+#         processed_ads = process_ad_results(ad_results)
+
+#         # 결과 반환
+#         return jsonify(processed_ads)
+#     except Exception as e:
+#         logging.error(f"Error processing advertisement: {str(e)}")
+#         return jsonify({"error": str(e)}), 500
+
+
+# if __name__ == "__main__":
+#     # 초기화 단계
+#     initialize_global_data()
+
+#     # 서버 실행
+#     app.run(debug=True)
+
+
+
+
+
+    ## --------------------------------------여기-- ##
+import pandas as pd
+from data_handler import preprocess_card_data,preprocess_annual_fee
 from interest_calculator import (
     calculate_explicit_interest,
     calculate_implicit_interest,
-    calculate_user_interest_count,
     merge_interests,
 )
 from contents import vectorize_card_data, calculate_card_similarity
-from card_recommendation import (calculate_card_scores, 
-                                 select_top_card_with_low_fee,
-                                 get_most_similar_cards,
-                                 add_user_interest_to_recommendations)
-import pandas as pd
+from card_recommendation import (
+    calculate_card_scores,
+    select_top_card_with_low_fee,
+    get_most_similar_cards,
+    add_user_interest_to_recommendations
+)
 from ad_generator import generate_ads_for_user, process_ad_results
-from flask import Flask, jsonify
 import logging
+
+# 로깅 설정
 logging.basicConfig(
     filename="debug.log",
     level=logging.DEBUG,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+# 테스트용 데이터
+test_data = {
+    "categories": [
+        {"categoryId": "1"},
+        {"categoryId": "2"},
+        {"categoryId": "3"},
+        {"categoryId": "4"},
+        {"categoryId": "5"}
+    ],
+    "logs": [
+        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:32.843038"},
+        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:33.561888"},
+        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:34.259727"}
+    ]
+}
+
+# 기존 Flask API 코드 주석 처리
+"""
+from flask import Flask, jsonify, request
+
 app = Flask(__name__)
 
-# 전역 변수
-card_info = None
-CategoryOfInterest = None
-log = None
-CardCategory = None
-AnnualFee = None
-Category = None
-combined_interest = None
-card_ctg_list = None
-ctg_matrix = None
-similarity_df = None
-
-# 데이터 로드 및 전처리 함수
-def setup_data():
-    global card_info, CategoryOfInterest, log, CardCategory, AnnualFee, Category
-    global combined_interest, card_ctg_list, ctg_matrix, similarity_df  # 추가된 전역 변수
-    # 카드 정보 데이터 로드
-    card_info = pd.read_csv("data/카드정보.csv")
-    CategoryOfInterest, log, CardCategory, AnnualFee, Category = load_data()
-
-    # 연회비 데이터 전처리
-    AnnualFee = preprocess_annual_fee(AnnualFee)
-
-    # 관심도 계산
-    explicit_interest = calculate_explicit_interest(CategoryOfInterest)
-    implicit_interest = calculate_implicit_interest(log)
-    combined_interest = merge_interests(explicit_interest, implicit_interest)
-
-    # 사용자별 관심 카테고리 수 추가
-    user_interest_count = calculate_user_interest_count(combined_interest)
-    combined_interest = pd.merge(combined_interest, user_interest_count, on='userId', how='left')
-
-    # 카드 데이터 전처리
-    card_ctg_list = preprocess_card_data(CardCategory, Category)
-
-    # 카드 혜택 벡터화
-    ctg_matrix, _  = vectorize_card_data(card_ctg_list)
-    # 카드 간 유사도 계산
-    similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
-
-
-@app.route("/advertisement/<int:user_id>", methods=["GET"])
-def get_advertisement(user_id):
+@app.route("/advertisement", methods=["POST"])
+def get_advertisement():
     try:
-        # 카드별 점수 계산
-        card_scores = calculate_card_scores(CardCategory, combined_interest)
-
-        # 사용자별 최적 카드 추천
-        top_cards = select_top_card_with_low_fee(card_scores, AnnualFee)
-
-        # 사용자별로 유사 카드 추천
-        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
-
-        # 추천 카드에서 사용자 관심 혜택 필터링
-        filtered_recommendations = add_user_interest_to_recommendations(
-            recommendations, combined_interest, card_ctg_list, Category
-        )
-
-        # 광고 생성
-        ad_results = generate_ads_for_user(user_id, filtered_recommendations, card_info)
-
-        # 광고 결과 처리 (adCopy1, adCopy2로 나눔)
-        processed_ads = process_ad_results(ad_results.to_dict(orient="records"))
-
-        # 결과 반환
-        return jsonify(processed_ads)
+        request_data = request.get_json()
+        # 이하 기존 로직
     except Exception as e:
-
-          # 에러 로그 출력
-        app.logger.error(f"Error processing advertisement for user {user_id}: {str(e)}")
+        logging.error(f"Error processing advertisement: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == "__main__":
-    setup_data()
-
+    initialize_global_data()
     app.run(debug=True)
+"""
+
+# 테스트 데이터 처리 함수
+def test_advertisement():
+    try:
+        # JSON 데이터를 DataFrame으로 변환
+        categories = test_data.get("categories", [])
+        logs = test_data.get("logs", [])
+        category_df = pd.DataFrame(categories)
+        logs_df = pd.DataFrame(logs)
+
+        print("Category Data:")
+        print(category_df)
+        print("Logs Data:")
+        print(logs_df)
+
+        # 관심도 계산
+        explicit_interest = calculate_explicit_interest(category_df)
+        implicit_interest = calculate_implicit_interest(logs_df)
+        combined_interest = merge_interests(explicit_interest, implicit_interest)
+
+        print("Explicit Interest:")
+        print(explicit_interest)
+        print("Implicit Interest:")
+        print(implicit_interest)
+        print("Combined Interest:")
+        print(combined_interest)
+
+        # 카드 데이터 초기화
+        card_info = pd.read_csv("data/카드정보.csv")
+        print("Card Info Before Merging:")
+        print(card_info.head())
+
+        annual_fee = pd.read_csv("data/카드실적.csv")
+        annual_fee = preprocess_annual_fee(annual_fee)  # 연회비 전처리
+        print("Annual Fee After Preprocessing:")
+        print(annual_fee.head())
+
+        # card_info와 연회비 데이터 병합
+        card_info = pd.merge(card_info, annual_fee[['cardId', 'domestic_fee']], on='cardId', how='left')
+        print("Card Info After Merging:")
+        print(card_info.head())
+
+        card_category = pd.read_csv("data/CardCategory.csv")
+        categories_df = pd.read_csv("data/Category.csv")
+
+        print("Card Category:")
+        print(card_category.head())
+        print("Categories Data:")
+        print(categories_df.head())
+
+        card_ctg_list = preprocess_card_data(card_category, categories_df)
+        print("Card Category List:")
+        print(card_ctg_list.head())
+
+        # 데이터 타입 통일
+        card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
+        combined_interest['categoryId'] = combined_interest['categoryId'].astype(str)
+
+        # 벡터화 및 유사도 계산
+        ctg_matrix, _ = vectorize_card_data(card_ctg_list)
+        similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
+
+        # 카드 점수 계산
+        card_scores = calculate_card_scores(card_ctg_list, combined_interest)
+        if card_scores.empty:
+            raise ValueError("Error: card_scores is empty. Check the input data and preprocessing logic.")
+
+        print("Card Scores:")
+        print(card_scores)
+
+        # 최적 카드 선택 (연회비 고려)
+        top_cards = select_top_card_with_low_fee(card_scores, card_info)
+        print("Top Cards Selected:")
+        print(top_cards)
+
+        # 유사 카드 추천
+        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
+        print("Recommendations:")
+        print(recommendations)
+
+        # 사용자 관심사 기반 혜택 추가
+        enriched_recommendations = add_user_interest_to_recommendations(
+            recommendations, combined_interest, card_ctg_list, categories_df
+        )
+        print("Enriched Recommendations:")
+        print(enriched_recommendations)
+
+        # 광고 생성 및 처리
+        ad_results = generate_ads_for_user(enriched_recommendations, card_info)
+        processed_ads = process_ad_results(ad_results)
+
+        # 결과 출력
+        print("\nProcessed Ads:")
+        print(processed_ads)
+
+    except KeyError as e:
+        logging.error(f"KeyError in test advertisement: {str(e)}")
+        print({"error": str(e)})
+
+    except ValueError as e:
+        logging.error(f"ValueError in test advertisement: {str(e)}")
+        print({"error": str(e)})
+
+    except Exception as e:
+        logging.error(f"Error in test advertisement: {str(e)}")
+        print({"error": str(e)})
+
+
+
+# 테스트 실행
+if __name__ == "__main__":
+    test_advertisement()
