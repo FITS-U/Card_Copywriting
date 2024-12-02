@@ -27,9 +27,9 @@ def preprocess_annual_fee(annual_fee_data):
 
 
 # 카드와 대분류 데이터 병합 및 전처리
-def preprocess_card_data(CardCategory, Category):
+def preprocess_card_data(card_category, categories_df):
     # 카드 데이터와 대분류 데이터 병합
-    card = pd.merge(CardCategory, Category, how='left', on='categoryId')
+    card = pd.merge(card_category, categories_df, how='left', on='categoryId')
 
     # 카드별 categoryName categoryId 리스트 생성
     card_ctg_list = card.groupby('cardId').agg({
