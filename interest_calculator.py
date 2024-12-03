@@ -29,21 +29,6 @@ def merge_interests(explicit_interest, implicit_interest):
     return combined
 
 
-# def filter_card_benefits_by_user_interest(combined_interest, card_ctg_list):
-# # 전체 사용자 관심 카테고리 추출
-#     user_interest_categories = combined_interest['categoryId'].unique()
-#     # 카드별 혜택에서 사용자 관심 카테고리와의 교집합 계산
-#     card_ctg_list = card_ctg_list.copy()
-#     card_ctg_list.loc[:, 'intersection'] = card_ctg_list['categoryId'].apply(
-#         lambda categories: list(set(categories) & set(user_interest_categories))
-#     )
-
-#     # 교집합이 비어있지 않은 카드만 필터링
-#     filtered_cards = card_ctg_list[card_ctg_list['intersection'].apply(len) > 0]
-
-#     # 결과 반환
-#     return filtered_cards
-
 def filter_card_benefits_by_user_interest(combined_interest, card_ctg_list):
     # 전체 사용자 관심 카테고리 추출
     user_interest_categories = set(combined_interest['categoryId'].astype(str)) # set으로 변환
@@ -61,12 +46,4 @@ def filter_card_benefits_by_user_interest(combined_interest, card_ctg_list):
 
     # 결과 반환
     return filtered_cards
-
-
-
-# def filter_all_users(combined_interest, card_ctg_list):
-#     # 사용자별 구분 없이 전체 관심 카테고리를 기반으로 필터링
-#     filtered_cards = filter_card_benefits_by_user_interest(combined_interest, card_ctg_list)
-#     return filtered_cards
-
 

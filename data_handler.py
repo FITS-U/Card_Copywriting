@@ -22,7 +22,7 @@ def extract_domestic_fee(fee_string):
 
 # 연회비 데이터 전처리
 def preprocess_annual_fee(annual_fee_data):
-    annual_fee_data['domestic_fee'] = annual_fee_data['annualfee'].apply(extract_domestic_fee)
+    annual_fee_data['domestic_fee'] = annual_fee_data['annualFee'].apply(extract_domestic_fee)
     return annual_fee_data
 
 

@@ -157,28 +157,12 @@ test_data = {
     ]
 }
 
-# 기존 Flask API 코드 주석 처리
-"""
+
+
 from flask import Flask, jsonify, request
-
-app = Flask(__name__)
-
-@app.route("/advertisement", methods=["POST"])
-def get_advertisement():
-    try:
-        request_data = request.get_json()
-        # 이하 기존 로직
-    except Exception as e:
-        logging.error(f"Error processing advertisement: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-if __name__ == "__main__":
-    initialize_global_data()
-    app.run(debug=True)
-"""
-
-# 테스트 데이터 처리 함수
-def test_advertisement():
+app = Flask(__name__)  # Flask 앱 객체 생성
+@app.route('/generate_ads', methods=['POST'])
+def generate_ads():
     try:
         # JSON 데이터를 DataFrame으로 변환
         categories = test_data.get("categories", [])
@@ -192,20 +176,16 @@ def test_advertisement():
         combined_interest = merge_interests(explicit_interest, implicit_interest)
 
         # 카드 데이터 초기화
-        card_info = pd.read_csv("data/카드정보.csv")
+        card_info = pd.read_csv("data/CardInfo.csv")
 
-        annual_fee = pd.read_csv("data/카드실적.csv")
-        annual_fee = preprocess_annual_fee(annual_fee)  # 연회비 전처리
+        card_info = preprocess_annual_fee(card_info)  # 연회비 전처리
 
         # card_info와 연회비 데이터 병합
-        card_info = pd.merge(card_info, annual_fee[['cardId', 'domestic_fee']], on='cardId', how='left')
-
         card_category = pd.read_csv("data/CardCategory.csv")
         categories_df = pd.read_csv("data/Category.csv")
 
 
         card_ctg_list = preprocess_card_data(card_category, categories_df)
-        print(f"card_ctg_list : {card_ctg_list}")
         # 데이터 타입 통일
         card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
         combined_interest['categoryId'] = combined_interest['categoryId'].astype(str)
@@ -225,8 +205,6 @@ def test_advertisement():
 
         # 유사 카드 추천
         recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
-        print(f"추천 카드 확인 : {recommendations}")
-        print(f"combinded_interest: {combined_interest}")
         # 사용자 관심사 기반 혜택 추가
         enriched_recommendations = add_user_interest_to_recommendations(
             recommendations, combined_interest, card_ctg_list, categories_df
@@ -236,23 +214,11 @@ def test_advertisement():
         ad_results = generate_ads_for_user(enriched_recommendations, card_info)
         processed_ads = process_ad_results(ad_results)
 
-        # 결과 출력
-        print("\nProcessed Ads:")
-        print(processed_ads)
-    except KeyError as e:
-        logging.error(f"KeyError in test advertisement: {str(e)}")
-        print({"error": str(e)})
-
-    except ValueError as e:
-        logging.error(f"ValueError in test advertisement: {str(e)}")
-        print({"error": str(e)})
-
+        return jsonify(processed_ads.to_dict(orient="records")), 200
+    
     except Exception as e:
-        logging.error(f"Error in test advertisement: {str(e)}")
-        print({"error": str(e)})
+        return jsonify({"error": str(e)}), 500
+    
 
-
-
-# 테스트 실행
-if __name__ == "__main__":
-    test_advertisement()
+if __name__ == '__main__':
+    app.run(debug=True)
