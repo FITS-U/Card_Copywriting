@@ -142,16 +142,18 @@ logging.basicConfig(
 # 테스트용 데이터
 test_data = {
     "categories": [
-        {"categoryId": "1"},
-        {"categoryId": "2"},
-        {"categoryId": "3"},
-        {"categoryId": "4"},
-        {"categoryId": "5"}
+        {"categoryId": 8},
+        {"categoryId": 9},
+        {"categoryId": 18},
+        {"categoryId": 26},
+        {"categoryId": 29}
     ],
     "logs": [
-        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:32.843038"},
-        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:33.561888"},
-        {"categoryId": 35, "eventType": "Click", "clickTime": "2024-12-01T15:26:34.259727"}
+        {"categoryId": 8, "eventType": "Click", "clickTime": "2024-12-01T15:26:32.843038"},
+        {"categoryId": 9, "eventType": "Click", "clickTime": "2024-12-01T15:26:33.561888"},
+        {"categoryId": 18, "eventType": "Click", "clickTime": "2024-12-01T15:26:34.259727"},
+        {"categoryId": 26, "eventType": "Click", "clickTime": "2024-12-01T15:26:34.259727"},
+        {"categoryId": 29, "eventType": "Click", "clickTime": "2024-12-01T15:26:34.259727"}
     ]
 }
 
@@ -203,30 +205,18 @@ def test_advertisement():
 
         # 카드 데이터 초기화
         card_info = pd.read_csv("data/카드정보.csv")
-        print("Card Info Before Merging:")
-        print(card_info.head())
 
         annual_fee = pd.read_csv("data/카드실적.csv")
         annual_fee = preprocess_annual_fee(annual_fee)  # 연회비 전처리
-        print("Annual Fee After Preprocessing:")
-        print(annual_fee.head())
 
         # card_info와 연회비 데이터 병합
         card_info = pd.merge(card_info, annual_fee[['cardId', 'domestic_fee']], on='cardId', how='left')
-        print("Card Info After Merging:")
-        print(card_info.head())
 
         card_category = pd.read_csv("data/CardCategory.csv")
         categories_df = pd.read_csv("data/Category.csv")
 
-        print("Card Category:")
-        print(card_category.head())
-        print("Categories Data:")
-        print(categories_df.head())
 
         card_ctg_list = preprocess_card_data(card_category, categories_df)
-        print("Card Category List:")
-        print(card_ctg_list.head())
 
         # 데이터 타입 통일
         card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
@@ -250,16 +240,12 @@ def test_advertisement():
         print(top_cards)
 
         # 유사 카드 추천
-        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
-        print("Recommendations:")
-        print(recommendations)
+        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=2)
 
         # 사용자 관심사 기반 혜택 추가
         enriched_recommendations = add_user_interest_to_recommendations(
             recommendations, combined_interest, card_ctg_list, categories_df
         )
-        print("Enriched Recommendations:")
-        print(enriched_recommendations)
 
         # 광고 생성 및 처리
         ad_results = generate_ads_for_user(enriched_recommendations, card_info)
@@ -268,7 +254,6 @@ def test_advertisement():
         # 결과 출력
         print("\nProcessed Ads:")
         print(processed_ads)
-
     except KeyError as e:
         logging.error(f"KeyError in test advertisement: {str(e)}")
         print({"error": str(e)})

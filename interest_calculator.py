@@ -24,8 +24,8 @@ def merge_interests(explicit_interest, implicit_interest):
     combined['implicit_interest'] = combined['implicit_interest'].astype(int)
 
     # 관심 카테고리별 빈도수 계산
-    combined['interest_count'] = combined.groupby('categoryId')['categoryId'].transform('count')
-    
+    unique_categories_count = len(combined['categoryId'].unique())
+    combined['interest_count'] = unique_categories_count    
     return combined
 
 
@@ -33,7 +33,8 @@ def filter_card_benefits_by_user_interest(combined_interest, card_ctg_list):
 # 전체 사용자 관심 카테고리 추출
     user_interest_categories = combined_interest['categoryId'].unique()
     # 카드별 혜택에서 사용자 관심 카테고리와의 교집합 계산
-    card_ctg_list['intersection'] = card_ctg_list['categoryId'].apply(
+    card_ctg_list = card_ctg_list.copy()
+    card_ctg_list.loc[:, 'intersection'] = card_ctg_list['categoryId'].apply(
         lambda categories: list(set(categories) & set(user_interest_categories))
     )
 

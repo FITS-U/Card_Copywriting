@@ -50,16 +50,15 @@ def generate_advertising_copy(card_name, benefits):
 
 def generate_ads_for_user(filtered_recommendations, card_info):
     # 추천 카드 상위 2개 선택
-    top_recommendations = filtered_recommendations.head(1)
+    top_recommendations = filtered_recommendations.head(2)
     ad_results = []
-
+    print(top_recommendations)
     for _, row in top_recommendations.iterrows():
         card_id = row['recommended_cardId']
         benefits = row['mainCtgNameListStr']
 
         # 카드 이름 가져오기
-        card_name_row = card_info[card_info['cardId'] == card_id]
-        card_name = card_name_row.iloc[0]['cardName'] if not card_name_row.empty else f"Card-{card_id}"
+        card_name = card_info[card_info['cardId'] == card_id]['cardName']
 
         # 광고 문구 생성
         ad_copy = generate_advertising_copy(card_name, benefits)
