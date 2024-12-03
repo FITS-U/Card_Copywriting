@@ -61,7 +61,6 @@ def get_most_similar_cards(top_cards, similarity_df, num_similar):
 def add_user_interest_to_recommendations(recommendations, combined_interest, card_ctg_list, Category):
     # Category 매핑 생성 (효율성 향상)
     category_map = Category.set_index("categoryId")["categoryName"].to_dict()
-    print(f"category_map : {category_map}")
     final_recommendations = []
     for _, rec in recommendations.iterrows():
         original_card_id = rec['original_cardId']
@@ -80,7 +79,6 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
         filtered_cards['intersection'] = filtered_cards['categoryId'].apply(
             lambda categories: list(set(categories) & user_interest_categories)
         )
-        print(f"3차 확인 : {filtered_cards}")
         # intersectionMapped 컬럼 생성
         if not filtered_cards.empty:
             filtered_cards["intersectionMapped"] = filtered_cards["intersection"].apply(
@@ -101,7 +99,6 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
                 "type":"recommended" # 구분 필드
             })
 
-            print(f"4차 확인 : {final_recommendations}")
 
     return pd.DataFrame(final_recommendations)
 
