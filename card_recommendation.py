@@ -7,15 +7,17 @@ def calculate_card_scores(card_ctg_list, combined_interest):
     for _, card_row in card_ctg_list.iterrows():
         card_id = card_row['cardId']
         card_categories = card_row['categoryId']
+        total_score = 0 # 카드별 점수를 누적할 변수
         for _, interest_row in combined_interest.iterrows():
             if interest_row['categoryId'] in card_categories:
                 score = (
                     interest_row['explicit_interest'] + 
                     interest_row['implicit_interest'] / max(1, interest_row['interest_count'])
                 )
-                scores.append({
+                total_score += score
+        scores.append({
                     'cardId': card_id,
-                    'category_score': score
+                    'category_score': total_score
                 })
 
     # 점수 데이터프레임 생성
@@ -26,17 +28,11 @@ def select_top_card_with_low_fee(card_scores, annual_fee_data,top_n=1):
     # 카드 정보에 연회비 추가 (예: domestic_fee)
     card_scores = pd.merge(card_scores, annual_fee_data[['cardId', 'domestic_fee']], on='cardId', how='left')
 
-    # 최적 카드를 선택하는 함수
-    def select_best_card(group):
-        max_score = group['category_score'].max()
-        top_cards = group[group['category_score'] == max_score]
+    # 'category_score'를 내림차순, 'domestic_fee'를 오름차순으로 정렬
+    top_card = card_scores.sort_values(by=['category_score', 'domestic_fee'], ascending=[False, True])
 
-        # 연회비가 낮은 카드 선택
-        top_cards_sorted = top_cards.sort_values(by='domestic_fee')
-        return top_cards_sorted.head(top_n) # 연회비가 낮은 순으로 top_n개 카드 선택 
-    # 그룹 단위로 처리된 결과를 DataFrame으로 반환
-    top_card = card_scores.groupby('cardId').apply(select_best_card)
-    return top_card.reset_index(drop=True)
+    # 가장 높은 점수 및 낮은 연회비를 가진 카드 선택 (top_n개)
+    return top_card.head(top_n)
 
 
 # 사용자별로 가장 유사한 카드 찾기
@@ -46,12 +42,11 @@ def get_most_similar_cards(top_cards, similarity_df, num_similar=2):
     for _, row in top_cards.iterrows():
         card_id = row['cardId']
 
-        # 유사도가 높은 카드를 찾고 정렬 (자기 자신 포함)
-        similar_cards = similarity_df.loc[card_id].sort_values(ascending=False)
-
-        # 자기 자신 카드를 포함하고 num_similar개의 카드만 선택
+        # 유사도를 계산하고 자기 자신을 제외하고 정렬
+        similar_cards = similarity_df.loc[card_id].drop(card_id).sort_values(acsending=False)
+        
+        # 상위 num_similar개의 카드만 선택
         top_similar_cards = similar_cards.head(num_similar)
-
         # 추천 결과 저장
         for similar_card_id, similarity in top_similar_cards.items():
             recommendations.append({
