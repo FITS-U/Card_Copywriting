@@ -36,14 +36,13 @@ def select_top_card_with_low_fee(card_scores, annual_fee_data,top_n=1):
 
 
 # 사용자별로 가장 유사한 카드 찾기
-def get_most_similar_cards(top_cards, similarity_df, num_similar=2):
+def get_most_similar_cards(top_cards, similarity_df, num_similar):
     recommendations = []
 
     for _, row in top_cards.iterrows():
         card_id = row['cardId']
-
         # 유사도를 계산하고 자기 자신을 제외하고 정렬
-        similar_cards = similarity_df.loc[card_id].drop(card_id).sort_values(acsending=False)
+        similar_cards = similarity_df.loc[card_id].drop(card_id).sort_values(ascending=False)
         
         # 상위 num_similar개의 카드만 선택
         top_similar_cards = similar_cards.head(num_similar)
@@ -62,30 +61,48 @@ def get_most_similar_cards(top_cards, similarity_df, num_similar=2):
 def add_user_interest_to_recommendations(recommendations, combined_interest, card_ctg_list, Category):
     # Category 매핑 생성 (효율성 향상)
     category_map = Category.set_index("categoryId")["categoryName"].to_dict()
-
-    filtered_recommendations = []
-
+    print(f"category_map : {category_map}")
+    final_recommendations = []
     for _, rec in recommendations.iterrows():
+        original_card_id = rec['original_cardId']
         recommended_card_id = rec['recommended_cardId']
         
         # 카드 데이터 필터링
         card_data = card_ctg_list[card_ctg_list['cardId'] == recommended_card_id]
-
         # 사용자 관심 카테고리에 해당하는 카드만 선택
         filtered_cards = filter_card_benefits_by_user_interest(combined_interest, card_data)
 
-        # 교집합 카테고리를 매핑해 이름 리스트로 변환
+        filtered_cards['categoryId'] = filtered_cards['categoryId'].apply(
+            lambda x: [str(i).strip() for i in x if str(i).strip().isdigit()] # 공백 제거 후 유효한 ID만 추출
+        )
+        user_interest_categories = set(combined_interest['categoryId'].astype(str))  # 관심 카테고리 ID를 집합으로 변환
+
+        filtered_cards['intersection'] = filtered_cards['categoryId'].apply(
+            lambda categories: list(set(categories) & user_interest_categories)
+        )
+        print(f"3차 확인 : {filtered_cards}")
+        # intersectionMapped 컬럼 생성
         if not filtered_cards.empty:
             filtered_cards["intersectionMapped"] = filtered_cards["intersection"].apply(
-                lambda ids: [category_map[int(id)] for id in ids if int(id) in category_map]
-            )
+                    lambda ids: [category_map[int(id)] for id in ids if int(id) in category_map]
+                )
 
-            # 추천 결과에 필터링된 카드 추가
-            filtered_recommendations.append({
-                "recommended_cardId": recommended_card_id,
-                "mainCtgNameListStr": filtered_cards.iloc[0]['intersectionMapped']
+            # original_cardId 추가
+            final_recommendations.append({
+                "final_card":original_card_id,
+                "mainCtgNameListStr":filtered_cards.iloc[0]['intersectionMapped'],
+                "type":"original" # 구분 필드
             })
 
-    return pd.DataFrame(filtered_recommendations)
+            # recommended_cardId 추가
+            final_recommendations.append({
+                "final_card":recommended_card_id,
+                "mainCtgNameListStr":filtered_cards.iloc[0]['intersectionMapped'],
+                "type":"recommended" # 구분 필드
+            })
+
+            print(f"4차 확인 : {final_recommendations}")
+
+    return pd.DataFrame(final_recommendations)
 
 

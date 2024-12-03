@@ -186,22 +186,10 @@ def test_advertisement():
         category_df = pd.DataFrame(categories)
         logs_df = pd.DataFrame(logs)
 
-        print("Category Data:")
-        print(category_df)
-        print("Logs Data:")
-        print(logs_df)
-
         # 관심도 계산
         explicit_interest = calculate_explicit_interest(category_df)
         implicit_interest = calculate_implicit_interest(logs_df)
         combined_interest = merge_interests(explicit_interest, implicit_interest)
-
-        print("Explicit Interest:")
-        print(explicit_interest)
-        print("Implicit Interest:")
-        print(implicit_interest)
-        print("Combined Interest:")
-        print(combined_interest)
 
         # 카드 데이터 초기화
         card_info = pd.read_csv("data/카드정보.csv")
@@ -217,7 +205,7 @@ def test_advertisement():
 
 
         card_ctg_list = preprocess_card_data(card_category, categories_df)
-
+        print(f"card_ctg_list : {card_ctg_list}")
         # 데이터 타입 통일
         card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
         combined_interest['categoryId'] = combined_interest['categoryId'].astype(str)
@@ -231,17 +219,14 @@ def test_advertisement():
         if card_scores.empty:
             raise ValueError("Error: card_scores is empty. Check the input data and preprocessing logic.")
 
-        print("Card Scores:")
-        print(card_scores)
 
         # 최적 카드 선택 (연회비 고려)
         top_cards = select_top_card_with_low_fee(card_scores, card_info)
-        print("Top Cards Selected:")
-        print(top_cards)
 
         # 유사 카드 추천
-        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=2)
-
+        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
+        print(f"추천 카드 확인 : {recommendations}")
+        print(f"combinded_interest: {combined_interest}")
         # 사용자 관심사 기반 혜택 추가
         enriched_recommendations = add_user_interest_to_recommendations(
             recommendations, combined_interest, card_ctg_list, categories_df
