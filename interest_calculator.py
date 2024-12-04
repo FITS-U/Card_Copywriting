@@ -32,6 +32,7 @@ def merge_interests(explicit_interest, implicit_interest):
 def filter_card_benefits_by_user_interest(combined_interest, card_ctg_list):
     # 전체 사용자 관심 카테고리 추출
     user_interest_categories = set(combined_interest['categoryId'].astype(str)) # set으로 변환
+    
     # 카드별 혜택에서 사용자 관심 카테고리와의 교집합 계산
     card_ctg_list = card_ctg_list.copy()  # 복사본 생성
 
