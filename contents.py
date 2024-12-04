@@ -7,7 +7,6 @@ from scipy.sparse import csr_matrix
 def vectorize_card_data(card_ctg_list):
     vectorizer = CountVectorizer()
     ctg_matrix = vectorizer.fit_transform(card_ctg_list['mainCtgNameListStr'])
-    print(f"**!!!!** card_ctg_list : {card_ctg_list}")
 
     return ctg_matrix, vectorizer.get_feature_names_out()
 
