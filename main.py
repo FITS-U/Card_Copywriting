@@ -157,6 +157,29 @@ test_data = {
     ]
 }
 
+# 테스트용 Benefit 데이터
+import pandas as pd
+
+# 주어진 데이터
+data = [
+    {
+        "cardId": 43,
+        "categoryName": "간편결제",
+        "categoryID": 3,
+        "benefitTitle": "삼성 페이로 결제 시 10% 할인",
+        "description": "온라인 결제 또는 오프라인 결제 중 택1하여 삼성페이로 결제 시 10% 결제일할인( 청구할인), 한도조건: 월 5,000원 (전월 일시불 및 할부 이용금액 30만원 이상 시 제공)"
+    },
+    {
+        "cardId": 43,
+        "categoryName": "통신",
+        "categoryID": 21,
+        "benefitTitle": "이동통신요금 자동납부 시 10% 할인",
+        "description": "SKT KT•LG Ut 이동통신요금 자동납부 시 10% 결제일할인(청구할인), 한도조건: 월 5,000원 (전월 일시불 및 할부 이용금액 30만원 이상 시 제공)"
+    }
+]
+
+# DataFrame으로 변환
+Benefit = pd.DataFrame(data)
 
 
 from flask import Flask, jsonify, request
@@ -177,10 +200,9 @@ def generate_ads():
 
         # 카드 데이터 초기화
         card_info = pd.read_csv("data/CardInfo.csv")
-
         card_info = preprocess_annual_fee(card_info)  # 연회비 전처리
 
-        # card_info와 연회비 데이터 병합
+        
         card_category = pd.read_csv("data/CardCategory.csv")
         categories_df = pd.read_csv("data/Category.csv")
 
@@ -189,6 +211,7 @@ def generate_ads():
         # 데이터 타입 통일
         card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
         combined_interest['categoryId'] = combined_interest['categoryId'].astype(str)
+
 
         # 벡터화 및 유사도 계산
         ctg_matrix, _ = vectorize_card_data(card_ctg_list)

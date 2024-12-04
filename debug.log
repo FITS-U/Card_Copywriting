@@ -3388,3 +3388,82 @@ information about how to avoid this problem.
 2024-12-03 16:14:43,143 - DEBUG - close.complete
 2024-12-03 16:14:43,143 - DEBUG - close.started
 2024-12-03 16:14:43,143 - DEBUG - close.complete
+2024-12-03 16:18:48,951 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-03 16:18:48,951 - INFO - [33mPress CTRL+C to quit[0m
+2024-12-03 16:18:48,952 - INFO -  * Restarting with stat
+2024-12-03 16:18:51,373 - WARNING -  * Debugger is active!
+2024-12-03 16:18:51,377 - INFO -  * Debugger PIN: 100-696-949
+2024-12-03 16:19:15,585 - INFO -  * Detected change in 'C:\\Users\\user\\Desktop\\marketing-langchain\\contents.py', reloading
+2024-12-03 16:19:15,763 - INFO -  * Restarting with stat
+2024-12-03 16:19:18,173 - WARNING -  * Debugger is active!
+2024-12-03 16:19:18,178 - INFO -  * Debugger PIN: 100-696-949
+2024-12-03 16:19:19,811 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-12-03 16:19:19,812 - DEBUG - load_verify_locations cafile='C:\\Users\\user\\Desktop\\marketing-langchain\\venv\\Lib\\site-packages\\certifi\\cacert.pem'
+2024-12-03 16:19:20,055 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-12-03 16:19:20,056 - DEBUG - load_verify_locations cafile='C:\\Users\\user\\Desktop\\marketing-langchain\\venv\\Lib\\site-packages\\certifi\\cacert.pem'
+2024-12-03 16:19:20,312 - DEBUG - Starting new HTTPS connection (1): api.smith.langchain.com:443
+2024-12-03 16:19:20,386 - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'user', 'content': "\n        ´ç½ÅÀº ¶Ù¾î³­ ±¤°í Ä«ÇÇ¶óÀÌÅÍÀÔ´Ï´Ù. Ä«µå ÀÌ¸§°ú ÇýÅÃÀ» ¹ÙÅÁÀ¸·Î Ä«µåÀÇ ¸Å·ÂÀ» Àü´ÞÇÏ´Â Ã¢ÀÇÀûÀÌ°í °¨µ¿ÀûÀÎ Ä«ÇÇ¸¦ Á¦ÀÛÇÏ¼¼¿ä.\n        - Ä«µåÀÇ ÇýÅÃÀ» °­Á¶ÇÏ°í, ½Ç¿ëÀûÀÌ°Å³ª °¨¼ºÀûÀÎ Á¢±ÙÀ¸·Î »ç¿ëÀÚÀÇ °ü½ÉÀ» ²ø¾î¾ß ÇÕ´Ï´Ù.\n        - **´Ù¾çÇÑ ½ºÅ¸ÀÏ**·Î Á¢±ÙÇÏ¼¼¿ä: ¿¹¸¦ µé¾î, ÇÑ ¹®±¸´Â Áñ°Ì°í °¨µ¿ÀûÀÎ ÅæÀ¸·Î, ´Ù¸¥ ¹®±¸´Â ½Ç¿ëÀûÀÌ°í °£°áÇÑ ÅæÀ¸·Î ÀÛ¼ºÇØ ÁÖ¼¼¿ä.\n        - ÀÌ¸ðÆ¼ÄÜÀ¸·Î »ýµ¿°¨À» ´õÇÏ°í Á÷°üÀûÀ¸·Î Àü´ÞµÇµµ·Ï ÇÏ¼¼¿ä.\n        - µÎ ÁÙ·Î ºÐ·® Á¦ÇÑÇÏ°í, °¢ ÁÙÀº ¿£ÅÍ Ã³¸®·Î ºÐ¸®\n        Ä«µå Á¤º¸:\n        - ÀÌ¸§: 31    ¾Æ½Ã¾Æ³ª »ï¼º¾Ö´ÏÆÐ½ºÇÃ·¡Æ¼´½\nName: cardName, dtype: object\n        - ÇýÅÃ: ['³³ºÎ ÇýÅÃ', '¿Ü½Ä']\n\n        ÀÛ¼ºÇÒ ¹®±¸:    \n        "}], 'model': 'gpt-4o-mini', 'n': 1, 'stream': True, 'temperature': 0.7}}
+2024-12-03 16:19:20,387 - DEBUG - Sending HTTP Request: POST https://api.openai.com/v1/chat/completions
+2024-12-03 16:19:20,387 - DEBUG - connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+2024-12-03 16:19:20,546 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001E7B6610090>
+2024-12-03 16:19:20,546 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x000001E7B6BBE060> server_hostname='api.openai.com' timeout=None
+2024-12-03 16:19:20,630 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001E7B688C250>
+2024-12-03 16:19:20,630 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-03 16:19:20,630 - DEBUG - send_request_headers.complete
+2024-12-03 16:19:20,630 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-03 16:19:20,630 - DEBUG - send_request_body.complete
+2024-12-03 16:19:20,630 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-03 16:19:20,880 - DEBUG - https://api.smith.langchain.com:443 "GET /info HTTP/11" 200 605
+2024-12-03 16:19:21,190 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 03 Dec 2024 07:19:21 GMT'), (b'Content-Type', b'text/event-stream; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-4sgygcylvitrcd1yawtt6yh8'), (b'openai-processing-ms', b'167'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'10000'), (b'x-ratelimit-limit-tokens', b'200000'), (b'x-ratelimit-remaining-requests', b'9999'), (b'x-ratelimit-remaining-tokens', b'199758'), (b'x-ratelimit-reset-requests', b'8.64s'), (b'x-ratelimit-reset-tokens', b'72ms'), (b'x-request-id', b'req_300e1cb3e89a5da575725a8d7619965a'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=wsIyyCFAKk7thNFq.MWZ.53wE5rspVY9U54h.iz3zLg-1733210361-1.0.1.1-7_jotDt4y_T_LVRms_FAHHrKTt5GohJ5LdarbfAbSdOy298oz__7cvBpWv_YsU9l9wumVapu9tB2phTpE5itow; path=/; expires=Tue, 03-Dec-24 07:49:21 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'X-Content-Type-Options', b'nosniff'), (b'Set-Cookie', b'_cfuvid=Y6OOxCzclGeF0W77eTf729QZlEkZp6naO.TFsLrC9a0-1733210361009-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8ec1c9b13c06aa5b-ICN'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-03 16:19:21,191 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-03 16:19:21,191 - DEBUG - HTTP Response: POST https://api.openai.com/v1/chat/completions "200 OK" Headers([('date', 'Tue, 03 Dec 2024 07:19:21 GMT'), ('content-type', 'text/event-stream; charset=utf-8'), ('transfer-encoding', 'chunked'), ('connection', 'keep-alive'), ('access-control-expose-headers', 'X-Request-ID'), ('openai-organization', 'user-4sgygcylvitrcd1yawtt6yh8'), ('openai-processing-ms', '167'), ('openai-version', '2020-10-01'), ('x-ratelimit-limit-requests', '10000'), ('x-ratelimit-limit-tokens', '200000'), ('x-ratelimit-remaining-requests', '9999'), ('x-ratelimit-remaining-tokens', '199758'), ('x-ratelimit-reset-requests', '8.64s'), ('x-ratelimit-reset-tokens', '72ms'), ('x-request-id', 'req_300e1cb3e89a5da575725a8d7619965a'), ('strict-transport-security', 'max-age=31536000; includeSubDomains; preload'), ('cf-cache-status', 'DYNAMIC'), ('set-cookie', '__cf_bm=wsIyyCFAKk7thNFq.MWZ.53wE5rspVY9U54h.iz3zLg-1733210361-1.0.1.1-7_jotDt4y_T_LVRms_FAHHrKTt5GohJ5LdarbfAbSdOy298oz__7cvBpWv_YsU9l9wumVapu9tB2phTpE5itow; path=/; expires=Tue, 03-Dec-24 07:49:21 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), ('x-content-type-options', 'nosniff'), ('set-cookie', '_cfuvid=Y6OOxCzclGeF0W77eTf729QZlEkZp6naO.TFsLrC9a0-1733210361009-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), ('server', 'cloudflare'), ('cf-ray', '8ec1c9b13c06aa5b-ICN'), ('alt-svc', 'h3=":443"; ma=86400')])
+2024-12-03 16:19:21,191 - DEBUG - request_id: req_300e1cb3e89a5da575725a8d7619965a
+2024-12-03 16:19:21,191 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-03 16:19:21,355 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/11" 202 33
+2024-12-03 16:19:22,171 - DEBUG - receive_response_body.complete
+2024-12-03 16:19:22,171 - DEBUG - response_closed.started
+2024-12-03 16:19:22,172 - DEBUG - response_closed.complete
+2024-12-03 16:19:22,181 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-12-03 16:19:22,182 - DEBUG - load_verify_locations cafile='C:\\Users\\user\\Desktop\\marketing-langchain\\venv\\Lib\\site-packages\\certifi\\cacert.pem'
+2024-12-03 16:19:22,421 - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2024-12-03 16:19:22,421 - DEBUG - load_verify_locations cafile='C:\\Users\\user\\Desktop\\marketing-langchain\\venv\\Lib\\site-packages\\certifi\\cacert.pem'
+2024-12-03 16:19:22,652 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/11" 202 33
+2024-12-03 16:19:22,670 - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'user', 'content': "\n        ´ç½ÅÀº ¶Ù¾î³­ ±¤°í Ä«ÇÇ¶óÀÌÅÍÀÔ´Ï´Ù. Ä«µå ÀÌ¸§°ú ÇýÅÃÀ» ¹ÙÅÁÀ¸·Î Ä«µåÀÇ ¸Å·ÂÀ» Àü´ÞÇÏ´Â Ã¢ÀÇÀûÀÌ°í °¨µ¿ÀûÀÎ Ä«ÇÇ¸¦ Á¦ÀÛÇÏ¼¼¿ä.\n        - Ä«µåÀÇ ÇýÅÃÀ» °­Á¶ÇÏ°í, ½Ç¿ëÀûÀÌ°Å³ª °¨¼ºÀûÀÎ Á¢±ÙÀ¸·Î »ç¿ëÀÚÀÇ °ü½ÉÀ» ²ø¾î¾ß ÇÕ´Ï´Ù.\n        - **´Ù¾çÇÑ ½ºÅ¸ÀÏ**·Î Á¢±ÙÇÏ¼¼¿ä: ¿¹¸¦ µé¾î, ÇÑ ¹®±¸´Â Áñ°Ì°í °¨µ¿ÀûÀÎ ÅæÀ¸·Î, ´Ù¸¥ ¹®±¸´Â ½Ç¿ëÀûÀÌ°í °£°áÇÑ ÅæÀ¸·Î ÀÛ¼ºÇØ ÁÖ¼¼¿ä.\n        - ÀÌ¸ðÆ¼ÄÜÀ¸·Î »ýµ¿°¨À» ´õÇÏ°í Á÷°üÀûÀ¸·Î Àü´ÞµÇµµ·Ï ÇÏ¼¼¿ä.\n        - µÎ ÁÙ·Î ºÐ·® Á¦ÇÑÇÏ°í, °¢ ÁÙÀº ¿£ÅÍ Ã³¸®·Î ºÐ¸®\n        Ä«µå Á¤º¸:\n        - ÀÌ¸§: 22    ¾Æ¸Þ¸®Ä­ ÀÍ½ºÇÁ·¹½º ºí·ç KB±¹¹ÎÄ«µå\nName: cardName, dtype: object\n        - ÇýÅÃ: ['³³ºÎ ÇýÅÃ', '¿Ü½Ä']\n\n        ÀÛ¼ºÇÒ ¹®±¸:    \n        "}], 'model': 'gpt-4o-mini', 'n': 1, 'stream': True, 'temperature': 0.7}}
+2024-12-03 16:19:22,671 - DEBUG - Sending HTTP Request: POST https://api.openai.com/v1/chat/completions
+2024-12-03 16:19:22,671 - DEBUG - connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=None socket_options=None
+2024-12-03 16:19:22,724 - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001E7B786A850>
+2024-12-03 16:19:22,724 - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x000001E7B6BBEF90> server_hostname='api.openai.com' timeout=None
+2024-12-03 16:19:22,777 - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x000001E7B688B9D0>
+2024-12-03 16:19:22,777 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-03 16:19:22,777 - DEBUG - send_request_headers.complete
+2024-12-03 16:19:22,777 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-03 16:19:22,778 - DEBUG - send_request_body.complete
+2024-12-03 16:19:22,778 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-03 16:19:23,154 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/11" 202 33
+2024-12-03 16:19:23,386 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 03 Dec 2024 07:19:23 GMT'), (b'Content-Type', b'text/event-stream; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-4sgygcylvitrcd1yawtt6yh8'), (b'openai-processing-ms', b'170'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'10000'), (b'x-ratelimit-limit-tokens', b'200000'), (b'x-ratelimit-remaining-requests', b'9998'), (b'x-ratelimit-remaining-tokens', b'199758'), (b'x-ratelimit-reset-requests', b'15.115s'), (b'x-ratelimit-reset-tokens', b'72ms'), (b'x-request-id', b'req_6e5b6e560e6188954886eb188b944c03'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=J1derFUBsnbkMzNp9dQE9XB9oo1.6.g3EBUv.3oyLMI-1733210363-1.0.1.1-297ZkLuRx20wJTQQREg5fiU3fqbyVrxNedww.3AoTPFhCDuUfM3SRaEVprjjv3wCBBMarvWwOk._XWrvpPmRGg; path=/; expires=Tue, 03-Dec-24 07:49:23 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'X-Content-Type-Options', b'nosniff'), (b'Set-Cookie', b'_cfuvid=oQ2T3edDulYc0r42iGDnJ_aanNgTXzZHSRKzBsBBHWM-1733210363186-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8ec1c9be8dcbaa6e-ICN'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-03 16:19:23,388 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-03 16:19:23,388 - DEBUG - HTTP Response: POST https://api.openai.com/v1/chat/completions "200 OK" Headers([('date', 'Tue, 03 Dec 2024 07:19:23 GMT'), ('content-type', 'text/event-stream; charset=utf-8'), ('transfer-encoding', 'chunked'), ('connection', 'keep-alive'), ('access-control-expose-headers', 'X-Request-ID'), ('openai-organization', 'user-4sgygcylvitrcd1yawtt6yh8'), ('openai-processing-ms', '170'), ('openai-version', '2020-10-01'), ('x-ratelimit-limit-requests', '10000'), ('x-ratelimit-limit-tokens', '200000'), ('x-ratelimit-remaining-requests', '9998'), ('x-ratelimit-remaining-tokens', '199758'), ('x-ratelimit-reset-requests', '15.115s'), ('x-ratelimit-reset-tokens', '72ms'), ('x-request-id', 'req_6e5b6e560e6188954886eb188b944c03'), ('strict-transport-security', 'max-age=31536000; includeSubDomains; preload'), ('cf-cache-status', 'DYNAMIC'), ('set-cookie', '__cf_bm=J1derFUBsnbkMzNp9dQE9XB9oo1.6.g3EBUv.3oyLMI-1733210363-1.0.1.1-297ZkLuRx20wJTQQREg5fiU3fqbyVrxNedww.3AoTPFhCDuUfM3SRaEVprjjv3wCBBMarvWwOk._XWrvpPmRGg; path=/; expires=Tue, 03-Dec-24 07:49:23 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), ('x-content-type-options', 'nosniff'), ('set-cookie', '_cfuvid=oQ2T3edDulYc0r42iGDnJ_aanNgTXzZHSRKzBsBBHWM-1733210363186-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), ('server', 'cloudflare'), ('cf-ray', '8ec1c9be8dcbaa6e-ICN'), ('alt-svc', 'h3=":443"; ma=86400')])
+2024-12-03 16:19:23,388 - DEBUG - request_id: req_6e5b6e560e6188954886eb188b944c03
+2024-12-03 16:19:23,388 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-03 16:19:24,673 - DEBUG - receive_response_body.complete
+2024-12-03 16:19:24,673 - DEBUG - response_closed.started
+2024-12-03 16:19:24,673 - DEBUG - response_closed.complete
+2024-12-03 16:19:24,681 - INFO - 127.0.0.1 - - [03/Dec/2024 16:19:24] "POST /generate_ads HTTP/1.1" 200 -
+2024-12-03 16:19:25,086 - DEBUG - https://api.smith.langchain.com:443 "POST /runs/multipart HTTP/11" 202 33
+2024-12-03 16:34:48,684 - INFO -  * Detected change in 'C:\\Users\\user\\Desktop\\marketing-langchain\\card_recommendation.py', reloading
+2024-12-03 16:34:48,684 - DEBUG - Closing Client.session
+2024-12-03 16:34:48,684 - DEBUG - Closing Client.session
+2024-12-03 16:34:48,731 - DEBUG - close.started
+2024-12-03 16:34:48,732 - DEBUG - close.complete
+2024-12-03 16:34:48,732 - DEBUG - close.started
+2024-12-03 16:34:48,732 - DEBUG - close.complete
+2024-12-03 16:34:48,899 - INFO -  * Restarting with stat
+2024-12-03 16:34:51,303 - WARNING -  * Debugger is active!
+2024-12-03 16:34:51,308 - INFO -  * Debugger PIN: 100-696-949
+2024-12-03 16:39:34,454 - INFO -  * Detected change in 'C:\\Users\\user\\Desktop\\marketing-langchain\\main.py', reloading
+2024-12-03 16:39:34,670 - INFO -  * Restarting with stat
+2024-12-03 16:39:37,095 - WARNING -  * Debugger is active!
+2024-12-03 16:39:37,099 - INFO -  * Debugger PIN: 100-696-949
+2024-12-03 16:41:30,684 - INFO -  * Detected change in 'C:\\Users\\user\\Desktop\\marketing-langchain\\main.py', reloading
+2024-12-03 16:41:30,887 - INFO -  * Restarting with stat
