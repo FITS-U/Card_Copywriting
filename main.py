@@ -15,6 +15,8 @@ from card_recommendation import (
 from ad_generator import generate_ads_for_user, process_ad_results
 import logging
 from flask import Flask, jsonify, request
+import pickle
+import os
 
 # 로깅 설정
 logging.basicConfig(
@@ -26,11 +28,11 @@ logging.basicConfig(
 # 테스트용 데이터
 test_data = {
     "categories": [
-        {"categoryId": 8},
-        {"categoryId": 9},
-        {"categoryId": 18},
-        {"categoryId": 26},
-        {"categoryId": 29}
+        {"categoryId": 11},
+        {"categoryId": 19},
+        {"categoryId": 10},
+        {"categoryId": 23},
+        {"categoryId": 22}
     ],
     "logs": [
         {"categoryId": 8, "eventType": "Click", "clickTime": "2024-12-01T15:26:32.843038"},
@@ -61,12 +63,38 @@ data = [
 
 # DataFrame으로 변환
 Benefit = pd.DataFrame(data)
+def preprocess_and_save_data():
+    card_info = pd.read_csv("data/CardInfo.csv")
+    card_info = card_info[['cardId','cardName','annualFee']]
+    card_info = preprocess_annual_fee(card_info)
 
+    card_category = pd.read_csv("data/CardCategory.csv")
+    categories_df = pd.read_csv("data/Category.csv")
+    card_ctg_list = preprocess_card_data(card_category, categories_df)
+
+    # 벡터화 및 유사도 계산
+    ctg_matrix, _ = vectorize_card_data(card_ctg_list)
+    similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
+
+    # 데이터 저장
+    with open("processed_data.pkl", "wb") as f:
+        pickle.dump((card_info, card_ctg_list,similarity_df,categories_df),f)
+
+# 데이터 로드 (API 호출시마다)
+def load_preprocessed_data():
+    with open("processed_data.pkl","rb") as f:
+        card_info, card_ctg_list, similarity_df,categories_df = pickle.load(f)
+    return card_info, card_ctg_list, similarity_df,categories_df
 
 app = Flask(__name__)  # Flask 앱 객체 생성
+
+# API에서 호출
 @app.route('/generate_ads', methods=['POST'])
 def generate_ads():
     try:
+        # 미리 준비된 데이터를 불러옴
+        card_info, card_ctg_list, similarity_df,categories_df = load_preprocessed_data()
+
         # JSON 데이터를 DataFrame으로 변환
         categories = test_data.get("categories", [])
         logs = test_data.get("logs", [])
@@ -77,25 +105,6 @@ def generate_ads():
         explicit_interest = calculate_explicit_interest(category_df)
         implicit_interest = calculate_implicit_interest(logs_df)
         combined_interest = merge_interests(explicit_interest, implicit_interest)
-
-        # 카드 데이터 초기화
-        card_info = pd.read_csv("data/CardInfo.csv")
-        card_info = preprocess_annual_fee(card_info)  # 연회비 전처리
-
-        
-        card_category = pd.read_csv("data/CardCategory.csv")
-        categories_df = pd.read_csv("data/Category.csv")
-
-
-        card_ctg_list = preprocess_card_data(card_category, categories_df)
-        # 데이터 타입 통일
-        card_ctg_list['categoryId'] = card_ctg_list['categoryId'].astype(str)
-        combined_interest['categoryId'] = combined_interest['categoryId'].astype(str)
-
-
-        # 벡터화 및 유사도 계산
-        ctg_matrix, _ = vectorize_card_data(card_ctg_list)
-        similarity_df = calculate_card_similarity(ctg_matrix, card_ctg_list)
 
         # 카드 점수 계산
         card_scores = calculate_card_scores(card_ctg_list, combined_interest)
@@ -122,6 +131,8 @@ def generate_ads():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-
 if __name__ == '__main__':
+    # pkl 파일이 존재하지 않으면 한 번만 데이터 준비를 실행
+    if not os.path.exists("processed_data.pkl"):
+        preprocess_and_save_data()  # 서버 시작 시 한 번만 데이터 준비
     app.run(debug=True)

@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 from interest_calculator import filter_card_benefits_by_user_interest
+
 # CSV 데이터 로드
 def load_data():
     CategoryOfInterest = pd.read_csv('data/CategoryOfInterest.csv')
@@ -30,7 +31,6 @@ def preprocess_annual_fee(annual_fee_data):
 def preprocess_card_data(card_category, categories_df):
     # 카드 데이터와 대분류 데이터 병합
     card = pd.merge(card_category, categories_df, how='left', on='categoryId')
-    print(f"****!!! 확인 card: {card}")
     # 카드별 categoryName categoryId 리스트 생성
     card_ctg_list = card.groupby('cardId').agg({
         'categoryId': list,
