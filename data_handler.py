@@ -2,15 +2,6 @@ import pandas as pd
 import re
 from interest_calculator import filter_card_benefits_by_user_interest
 
-# CSV 데이터 로드
-def load_data():
-    CategoryOfInterest = pd.read_csv('data/CategoryOfInterest.csv')
-    log = pd.read_csv('data/log.csv')
-    CardCategory = pd.read_csv('data/CardCategory.csv')
-    AnnualFee = pd.read_csv('data/카드실적.csv')
-    Category = pd.read_csv('data/Category.csv')
-
-    return CategoryOfInterest, log, CardCategory, AnnualFee, Category
 
 # 연회비 데이터에서 국내 연회비 추출
 def extract_domestic_fee(fee_string):
@@ -23,21 +14,21 @@ def extract_domestic_fee(fee_string):
 
 # 연회비 데이터 전처리
 def preprocess_annual_fee(annual_fee_data):
-    annual_fee_data['domestic_fee'] = annual_fee_data['annualFee'].apply(extract_domestic_fee)
+    annual_fee_data['domestic_fee'] = annual_fee_data["annualfee"].apply(extract_domestic_fee)
     return annual_fee_data
 
 
 # 카드와 대분류 데이터 병합 및 전처리
 def preprocess_card_data(card_category, categories_df):
     # 카드 데이터와 대분류 데이터 병합
-    card = pd.merge(card_category, categories_df, how='left', on='categoryId')
-    # 카드별 categoryName categoryId 리스트 생성
-    card_ctg_list = card.groupby('cardId').agg({
-        'categoryId': list,
-        'categoryName': list
+    card = pd.merge(card_category, categories_df, how='left', on='categoryid')
+    # 카드별 categoryName categoryid 리스트 생성
+    card_ctg_list = card.groupby('cardid').agg({
+        'categoryid': list,
+        'categoryname': list
     }).reset_index()
     # 리스트 데이터를 문자열로 변환
-    card_ctg_list['mainCtgNameListStr'] = card_ctg_list['categoryName'].apply(lambda x: " ".join(x))
+    card_ctg_list['mainCtgNameListStr'] = card_ctg_list['categoryname'].apply(lambda x: " ".join(x))
     
     return card_ctg_list
 
@@ -46,5 +37,5 @@ def get_filtered_card_data(user_id, combined_interest, card_ctg_list):
     filtered_cards = filter_card_benefits_by_user_interest(user_id, combined_interest, card_ctg_list)
 
     # 카드 ID, 이름, 혜택 필드만 유지
-    filtered_cards = filtered_cards[['cardId', 'mainCtgNameListStr']]
+    filtered_cards = filtered_cards[['cardid', 'mainCtgNameListStr']]
     return filtered_cards

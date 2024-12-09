@@ -27,7 +27,7 @@ def generate_advertising_copy(card_name, benefits):
         - 다양한 스타일로 접근하세요: 예를 들어, 한 문구는 즐겁고 감동적인 톤으로, 다른 문구는 실용적이고 간결한 톤으로 작성해 주세요.
         - 이모티콘으로 생동감을 더하고 직관적으로 전달되도록 하세요.
         - 두 줄로 분량 제한하고, 각 줄은 엔터 처리로 분리
-        - 반드시 지시사항을 따르며, 지침을 어길 경우 작업은 실패로 간주됩니다.
+        - 광고 문구가 아닌 쓸데없는 말이 있으면 절대로 안됩니다.
         카드 정보:
         - 이름: {card_name}
         - 혜택: {benefits}
@@ -58,14 +58,14 @@ def generate_ads_for_user(filtered_recommendations, card_info):
         benefits = row['mainCtgNameListStr']
 
         # 카드 이름 가져오기
-        card_name = card_info[card_info['cardId'] == card_id]['cardName']
+        card_name = card_info[card_info['cardid'] == card_id]['cardname']
 
         # 광고 문구 생성
         ad_copy = generate_advertising_copy(card_name, benefits)
 
         # 광고 결과 저장
         ad_results.append({
-            "cardId": card_id,
+            "cardid": card_id,
             "cardName": card_name,
             "benefits": benefits,
             "adCopy": ad_copy
@@ -88,7 +88,7 @@ def process_ad_results(ad_results):
 
         # 새로운 구조로 저장
         processed_results.append({
-            "cardId": ad['cardId'],
+            "cardid": ad['cardid'],
             "adCopy1": ad_copy_1,
             "adCopy2": ad_copy_2
         })
