@@ -58,15 +58,15 @@ def generate_ads_for_user(filtered_recommendations, card_info):
         benefits = row['mainCtgNameListStr']
 
         # 카드 이름 가져오기
-        card_name = card_info[card_info['cardid'] == card_id]['cardname']
+        card_name = card_info[card_info['card_id'] == card_id]['card_name']
 
         # 광고 문구 생성
         ad_copy = generate_advertising_copy(card_name, benefits)
 
         # 광고 결과 저장
         ad_results.append({
-            "cardid": card_id,
-            "cardName": card_name,
+            "card_id": card_id,
+            "card_name": card_name,
             "benefits": benefits,
             "adCopy": ad_copy
         })
@@ -88,7 +88,7 @@ def process_ad_results(ad_results):
 
         # 새로운 구조로 저장
         processed_results.append({
-            "cardid": ad['cardid'],
+            "card_id": ad['card_id'],
             "adCopy1": ad_copy_1,
             "adCopy2": ad_copy_2
         })

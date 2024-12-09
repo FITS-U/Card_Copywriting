@@ -28,11 +28,4 @@ class Database():
     def commit(self):
         self.db.commit()
 
-Category=Database()
-Category_df = Category.execute("SELECT * FROM Category;")
 
-CardInfo=Database()
-CardInfo_df = CardInfo.execute("SELECT * FROM CardInfo;")
-
-Benefit=Database()
-Benefit_df = Benefit.execute("SELECT * FROM Benefit;")

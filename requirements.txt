@@ -10,3 +10,5 @@ scikit-learn
 pandas
 flask
 scipy
+requests
+psycopg2-binary

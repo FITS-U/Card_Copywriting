@@ -15,5 +15,5 @@ def vectorize_card_data(card_ctg_list):
 def calculate_card_similarity(ctg_matrix, card_ctg_list):
     # 희소 행렬로 계산
     cate_sim = cosine_similarity(csr_matrix(ctg_matrix))
-    similarity_df = pd.DataFrame(cate_sim, index=card_ctg_list['cardid'], columns=card_ctg_list['cardid'])
+    similarity_df = pd.DataFrame(cate_sim, index=card_ctg_list['card_id'], columns=card_ctg_list['card_id'])
     return similarity_df
