@@ -1,21 +1,22 @@
 import pandas as pd
 from flask import Flask, jsonify, request
-from data_handler import preprocess_card_data, preprocess_annual_fee
-from interest_calculator import (
+from modules.data_handler import preprocess_card_data, preprocess_annual_fee
+from modules.interest_calculator import (
     calculate_explicit_interest,
     calculate_implicit_interest,
     merge_interests,
 )
-from contents import vectorize_card_data, calculate_card_similarity
-from card_recommendation import (
+from modules.contents import vectorize_card_data, calculate_card_similarity
+from modules.card_recommendation import (
     calculate_card_scores,
     select_top_card_with_low_fee,
     get_most_similar_cards,
     add_user_interest_to_recommendations
 )
-from ad_generator import generate_ads_for_user, process_ad_results
-from db import Database
+from modules.ad_generator import generate_ads_for_user, process_ad_results
+from database.db import Database
 import logging
+
 # 로깅 설정
 logging.basicConfig(level=logging.DEBUG)
 
@@ -32,7 +33,6 @@ def data_load():
 
         Benefit = Database()
         Benefit_df = Benefit.execute("SELECT * FROM benefit;")
-        # Benefit_df = Benefit_df.rename(columns={"category_id": 'categoryid', 'card_id': 'cardid'})
 
         return Category_df, CardInfo_df, Benefit_df
     except Exception as e:
@@ -58,23 +58,18 @@ def generate_ads():
 
         # 데이터 로드
         card_category, card_info, categories_df = data_load()
-        print(categories_df)
         # 혜택 데이터 생성
-        benefits = categories_df.groupby('card_id')['benefit_title'].apply(list).reset_index(name='benefits')
 
         categories = test_data.get("category", [])
         logs = test_data.get("logs", [])
         # JSON 데이터를 DataFrame으로 변환
         category_df = pd.DataFrame(categories)
-        print(categories_df)
 
         logs_df = pd.DataFrame(logs)
-
         # 관심도 계산
         explicit_interest = calculate_explicit_interest(category_df)
         implicit_interest = calculate_implicit_interest(logs_df)
         combined_interest = merge_interests(explicit_interest, implicit_interest)
-
         # 연회비 및 카드 데이터 전처리
         card_info = preprocess_annual_fee(card_info)
         card_ctg_list = preprocess_card_data(card_category, categories_df)
@@ -92,21 +87,18 @@ def generate_ads():
 
         # 최적 카드 선택 (연회비 고려)
         top_cards = select_top_card_with_low_fee(card_scores, card_info)
-
         # 유사 카드 추천
-        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=1)
-
+        recommendations = get_most_similar_cards(top_cards, similarity_df, num_similar=2)
         # 사용자 관심사 기반 혜택 추가
         enriched_recommendations = add_user_interest_to_recommendations(
             recommendations, combined_interest, card_ctg_list, card_category
         )
         # 광고 생성 및 처리
-        print(f"확인해보자 : {enriched_recommendations}")
+
         ad_results = generate_ads_for_user(enriched_recommendations, card_info)
         processed_ads = process_ad_results(ad_results)
         ad_data = processed_ads.to_dict(orient="records")
         
-        print(ad_data)
         
         return jsonify(ad_data), 200
 

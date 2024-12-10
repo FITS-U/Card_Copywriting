@@ -1,6 +1,6 @@
 import pandas as pd
 import re
-from interest_calculator import filter_card_benefits_by_user_interest
+from modules.interest_calculator import filter_card_benefits_by_user_interest
 
 
 # 연회비 데이터에서 국내 연회비 추출
