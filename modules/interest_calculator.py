@@ -8,7 +8,7 @@ def calculate_explicit_interest(categories_df):
 # 암묵적 관심도 계산
 def calculate_implicit_interest(logs_df):
     # logs_df에서 Click 이벤트 기반으로 암묵적 관심도 계산
-    return logs_df[logs_df['eventType'] == "Click"].groupby('category_id').size().reset_index(name='implicit_interest')
+    return logs_df.groupby('category_id').size().reset_index(name='implicit_interest')
 
 
 # 명시적/암묵적 관심도 병합

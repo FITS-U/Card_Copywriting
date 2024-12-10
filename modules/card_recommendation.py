@@ -1,5 +1,5 @@
 import pandas as pd
-from interest_calculator import filter_card_benefits_by_user_interest
+from modules.interest_calculator import filter_card_benefits_by_user_interest
 
 # 카드별 점수 계산
 def calculate_card_scores(card_ctg_list, combined_interest):
@@ -62,25 +62,28 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
     # Category 매핑 생성 (효율성 향상)
     category_map = Category.set_index("category_id")["category_name"].to_dict()
     final_recommendations = []
+
     for _, rec in recommendations.iterrows():
         original_card_id = rec['original_card_id']
         recommended_card_id = rec['recommended_card_id']
         
         # 카드 데이터 필터링
         card_data = card_ctg_list[card_ctg_list['card_id'] == recommended_card_id]
+        
         # 사용자 관심 카테고리에 해당하는 카드만 선택
         filtered_cards = filter_card_benefits_by_user_interest(combined_interest, card_data)
-        filtered_cards['category_id'] = filtered_cards['category_id'].apply(
-            lambda x: [str(i).strip() for i in x if str(i).strip().isdigit()] # 공백 제거 후 유효한 ID만 추출
-        )
-        user_interest_categories = set(combined_interest['category_id'].astype(str))  # 관심 카테고리 ID를 집합으로 변환
 
-        # filtered_cards['intersection'] = filtered_cards['categoryid'].apply(
-        #     lambda categories: list(set(categories) & user_interest_categories)
-        # )
+        # 공백 제거 후 유효한 ID만 추출
+        filtered_cards['category_id'] = filtered_cards['category_id'].apply(
+            lambda x: [str(i).strip() for i in x if str(i).strip().isdigit()] 
+        )
+
+        # 관심 카테고리 ID를 집합으로 변환
+        user_interest_categories = set(combined_interest['category_id'].astype(str)) 
+
         filtered_cards['intersection'] = filtered_cards['category_id'].apply(
-    lambda categories: list(set(categories) & user_interest_categories) if isinstance(categories, list) else []
-)
+        lambda categories: list(set(categories) & user_interest_categories) if isinstance(categories, list) else []
+        )
 
         # intersectionMapped 컬럼 생성
         if not filtered_cards.empty:
@@ -102,7 +105,7 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
                 "type":"recommended" # 구분 필드
             })
 
-
+        print(f"확인 데이터 : {final_recommendations}")
     return pd.DataFrame(final_recommendations)
 
 
