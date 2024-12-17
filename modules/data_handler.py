@@ -22,13 +22,18 @@ def preprocess_annual_fee(annual_fee_data):
 def preprocess_card_data(card_category, categories_df):
     # 카드 데이터와 대분류 데이터 병합
     card = pd.merge(card_category, categories_df, how='left', on='category_id')
+
+    # 중복된 category_id 지우기
+    card.drop_duplicates(subset=['card_id','category_id'],ignore_index=True,inplace=True)
+
     # 카드별 categoryName categoryid 리스트 생성
     card_ctg_list = card.groupby('card_id').agg({
         'category_id': list,
         'category_name': list
     }).reset_index()
+    
     # 리스트 데이터를 문자열로 변환
-    card_ctg_list['mainCtgNameListStr'] = card_ctg_list['category_name'].apply(lambda x: " ".join(x))
+    card_ctg_list['ctg_name_list'] = card_ctg_list['category_name'].apply(lambda x: " ".join(x))
     
     return card_ctg_list
 
@@ -37,5 +42,5 @@ def get_filtered_card_data(user_id, combined_interest, card_ctg_list):
     filtered_cards = filter_card_benefits_by_user_interest(user_id, combined_interest, card_ctg_list)
 
     # 카드 ID, 이름, 혜택 필드만 유지
-    filtered_cards = filtered_cards[['card_id', 'mainCtgNameListStr']]
+    filtered_cards = filtered_cards[['card_id', 'ctg_name_list']]
     return filtered_cards
