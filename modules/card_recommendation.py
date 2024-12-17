@@ -94,18 +94,17 @@ def add_user_interest_to_recommendations(recommendations, combined_interest, car
             # original_card_id 추가
             final_recommendations.append({
                 "final_card":original_card_id,
-                "mainCtgNameListStr":filtered_cards.iloc[0]['intersectionMapped'],
+                "ctg_name_list":filtered_cards.iloc[0]['intersectionMapped'],
                 "type":"original" # 구분 필드
             })
 
             # recommended_card_id 추가
             final_recommendations.append({
                 "final_card":recommended_card_id,
-                "mainCtgNameListStr":filtered_cards.iloc[0]['intersectionMapped'],
+                "ctg_name_list":filtered_cards.iloc[0]['intersectionMapped'],
                 "type":"recommended" # 구분 필드
             })
 
-        print(f"확인 데이터 : {final_recommendations}")
     return pd.DataFrame(final_recommendations)
 
 
